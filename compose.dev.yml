@@ -1,0 +1,38 @@
+services:
+  db:
+    ports:
+      - "${DB_PORT:-5432}:5432"
+
+  backend:
+    build: ./backend
+    environment:
+      APP_ENV: dev
+      DATABASE_URL: postgresql+psycopg://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
+      CORS_ORIGINS: ${CORS_ORIGINS}
+      INIT_DB: ${INIT_DB:-true}
+    volumes:
+      - ./backend:/app
+      - venv:/app/.venv
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      sh -c "([ -f uv.lock ] && uv sync --frozen || uv sync) &&
+             uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+    networks:
+      - app_net
+
+  frontend:
+    image: node:20-alpine
+    working_dir: /app
+    environment:
+      VITE_API_URL: ${VITE_API_URL}
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "${FRONTEND_PORT:-5173}:5173"
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 5173"
+    networks:
+      - app_net

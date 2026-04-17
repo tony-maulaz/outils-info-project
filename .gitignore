@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+*.egg-info/
+dist/
+.eggs/
+
+# Env files (ne pas committer les vrais env, committer les .example)
+.env.dev
+.env.prod
+
+# Node
+node_modules/
+dist/
+.DS_Store
+
+# Docker
+.docker/
+
+# IDE
+.vscode/
+.idea/
+*.swp

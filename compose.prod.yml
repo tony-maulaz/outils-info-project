@@ -1,0 +1,31 @@
+services:
+  backend:
+    build: ./backend
+    environment:
+      APP_ENV: prod
+      DATABASE_URL: postgresql+psycopg://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
+      CORS_ORIGINS: ${CORS_ORIGINS}
+      INIT_DB: "false"
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      sh -c "([ -f uv.lock ] && uv sync --no-dev --frozen || uv sync --no-dev) &&
+             uv run uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    restart: unless-stopped
+    networks:
+      - app_net
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL}
+    ports:
+      - "${FRONTEND_PORT:-80}:80"
+    restart: unless-stopped
+    networks:
+      - app_net
