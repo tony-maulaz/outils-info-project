@@ -68,7 +68,7 @@ async function handleLogin() {
     const response = await api.post('/api/login', {
       email: form.email,
     })
-    appStore.setCurrentUser(response.data)
+    appStore.setCurrentUser(response.data.user, response.data.access_token)
     router.push({ name: 'home' })
   } catch (err) {
     if (err.response?.status === 401) {

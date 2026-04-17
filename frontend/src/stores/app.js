@@ -2,21 +2,28 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const useAppStore = defineStore('app', () => {
-  // Utilisateur connecté (null si non connecté)
-  const currentUser = ref(null)
+  // Persistance du token entre les rechargements de page
+  const token = ref(localStorage.getItem('token') || null)
+  const currentUser = ref(JSON.parse(localStorage.getItem('user') || 'null'))
 
-  // Exemple d'une valeur dans le store (à titre démonstratif)
   const appMessage = ref('Bienvenue dans le cours WEB !')
 
-  function setCurrentUser(user) {
+  function setCurrentUser(user, accessToken) {
     currentUser.value = user
+    token.value = accessToken
+    localStorage.setItem('user', JSON.stringify(user))
+    localStorage.setItem('token', accessToken)
   }
 
   function logout() {
     currentUser.value = null
+    token.value = null
+    localStorage.removeItem('user')
+    localStorage.removeItem('token')
   }
 
   return {
+    token,
     currentUser,
     appMessage,
     setCurrentUser,
