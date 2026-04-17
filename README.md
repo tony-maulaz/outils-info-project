@@ -129,13 +129,14 @@ project-base/
 │   └── app/
 │       ├── main.py        # Point d'entrée FastAPI
 │       ├── db.py          # Engine, session, init_db()
+│       ├── auth.py        # JWT : create_token(), get_current_user()
 │       ├── logger.py
 │       ├── models/
 │       │   └── user.py    # Modèle SQLAlchemy User (base à compléter)
 │       ├── schemas/
-│       │   └── user.py    # Schémas Pydantic
+│       │   └── user.py    # Schémas Pydantic (UserOut, LoginRequest, TokenOut)
 │       └── api/
-│           └── users.py   # Routes /api/users, /api/login, /api/me
+│           └── users.py   # Routes /api/users, /api/login
 └── frontend/
     ├── Dockerfile          # Build prod (nginx)
     ├── nginx.conf
@@ -143,14 +144,14 @@ project-base/
     ├── vite.config.js
     └── src/
         ├── main.js
-        ├── api.js          # Instance axios centralisée (baseURL depuis .env)
+        ├── api.js          # Instance axios centralisée + interceptor JWT
         ├── App.vue
         ├── assets/
         │   └── main.css   # Styles globaux partagés (card, btn, form, alert...)
         ├── router/
         │   └── index.js   # Routes + beforeEach guard (à compléter)
         ├── stores/
-        │   └── app.js     # Store Pinia (currentUser)
+        │   └── app.js     # Store Pinia (currentUser, token)
         └── views/
             ├── HomeView.vue
             └── LoginView.vue
