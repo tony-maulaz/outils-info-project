@@ -31,8 +31,12 @@ Le projet est **libre** : les groupes choisissent eux-mêmes le sujet de leur ap
 - Obligatoirement une table **`user`** avec au minimum un utilisateur `admin` et un utilisateur normal
 - Les mots de passe des utilisateurs doivent être **hashés** (ex: bcrypt)
 - Le mot de passe ne doit **jamais** être renvoyé par l'API
+- La base de données doit être protégée par les **contraintes de base** : `NOT NULL`, `UNIQUE`, `FOREIGN KEY`, longueurs maximales (`VARCHAR`)
 
 ### 3.2 Backend (FastAPI + SQLAlchemy)
+
+- Les requêtes SQL doivent être **minimisées** : ne charger que les données nécessaires (pas de `SELECT *` inutile, pas de relations chargées si elles ne sont pas utilisées dans la réponse)
+
 
 L'API doit exposer **au minimum** les routes suivantes :
 
@@ -45,11 +49,12 @@ L'API doit exposer **au minimum** les routes suivantes :
 | `GET`   | `/api/me` | Retourner l'utilisateur connecté |
 | `GET`   | `/api/<ressource>` | Liste d'une ressource |
 | `GET`   | `/api/<ressource>/{id}` | Détail d'une ressource (avec jointure) |
+| `POST`  | `/api/<ressource>` | Créer un élément |
 | `POST`  | `/api/<ressource>` | Créer un élément (avec table de jointure) |
 | `PUT`   | `/api/<ressource>/{id}` | Modifier un élément |
+| `DELETE`| `/api/<ressource>/{id}` | Supprimer un élément (avec table de jointure) |
 | `DELETE`| `/api/<ressource>/{id}` | Supprimer un élément |
 
-> **Note** : Pas besoin de sécuriser l'API avec des tokens JWT.
 
 ### 3.3 Frontend (Vue.js 3)
 
